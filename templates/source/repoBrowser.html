@@ -1,0 +1,60 @@
+{% extends "wrapper.html" %}
+
+{% block content %}
+{% include 'source/panel.html' %}
+<div class="row-fluid">
+    <div class="span4">
+    <span></span>
+    {% for repository in content.tree %}
+        <a href="/source/{{ content.activeRepoId }}/{{ repository.path }}"> {{ repository.path }} <span>{{ repository.revision}}</span></a><br>
+    {% endfor %}
+    </div>
+    <div class="span8">
+        {% include 'source/filterPanel.html' %}
+        {% for item in repositoryLog %}
+        <div class="row-fluid">
+            {% if item.error %}
+                {{ item.error }}
+            {% else %}
+                {{ item.author }} @  {{ item.date|datetimeformat('%H:%M %d/%m') }} @ {{item.revision}} : <b>{{ item.messag }}</b>
+                <span class="create_review"
+                      x-vcs="{{ content.activeRepoId }}"
+                      x-author="{{item.author}}"
+                      x-revision1="{{item.revision}}"
+                      x-revision2="{{item.revision}}"
+                      x-count="{{item.changed_paths|count}}"
+                 > add commit to review</span>
+                <span class="source_show_diff">
+                    [ show diffs ]
+                </span>
+                <br>
+                {% if item.changed_paths|count < 4 %}
+                    {% set hide_wrapper_open, hide_wrapper_closed = '','' %}
+                {% else %}
+                    {% set hide_wrapper_open = '<div onclick="$(\'#' + item.revision|string + '_files\').toggle();">' + item.changed_paths|count|string + ' files (click to expand)</div><div id="' + item.revision|string + '_files"style="display:none">' %}
+                    {% set hide_wrapper_closed = '</div>' %}
+                {% endif %}
+
+                {{ hide_wrapper_open|safe }}
+                {% for path in item.changed_paths %}
+                    {% if path.action == 'A' %}
+                        {% set icon_html = '<i class="icon-plus"></i>' %}
+                    {% elif path.action == 'D' %}
+                        {% set icon_html = '<i class="icon-remove"></i>' %}
+                    {% elif path.action == 'M' %}
+                        {% set icon_html = '<i class="icon-refresh"></i>' %}
+                    {% else %}
+                        {% set icon_html = '[' + path.action + ']' %}
+                    {% endif %}
+                    {{ icon_html|safe }} {{ path.path }} <br>
+                {% endfor %}
+                {{ hide_wrapper_closed|safe }}
+            {% endif %}
+            <br>
+        </div>
+        {% endfor %}
+        {{ repositoryLog }}
+    </div>
+</div>
+{{ repositoryLog  }}
+{% endblock %}

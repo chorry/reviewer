@@ -1,0 +1,55 @@
+{% extends "wrapper.html" %}
+{% block content %}
+<table>
+    <tr>
+        <th>State</th>
+        <th>Name</th>
+        <th>Files</th>
+        <th>Comments</th>
+        <th>Author</th>
+        <th>Reviewers</th>
+    </tr>
+    {% for review in content.reviews %}
+    <tr>
+        <td> {{ review.properties.state }}</td>
+        {% if review.properties.name is none %}
+        <td><a href="review/{{ review.properties.id }} "> {{ review.properties.name }} {{ review.properties.description }}</a></td>
+        {% else %}
+        <td><a href="review/{{ review.properties.id }} "> noname [click to set name/description] </a></td>
+        {% endif %}
+        <td> {{ review.properties.fileCount }}</td>
+        <td> {{ review.properties.comments }}</td>
+        <td> {{ review.properties.author }}</td>
+        <td>
+            {% for reviewer in review.reviewers %} {{ reviewer }} {% endfor %}
+            [add reviewer]
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<hr>
+        <h3>Orphans</h3>
+{% if content.orphans is not none %}
+    {% for orphan in content.orphans %}
+    <p id="{{orphan.vcs_id}}_{{orphan.author}}_{{orphan.r_from}}_{{orphan.r_to}}">
+        <i class="icon-play expand_orphan_file_list"></i>
+           {{ orphan.count }} files of {{ orphan.author }} ( {{orphan.r_from}}-{{orphan.r_to}} )
+            <span class="add_selected_to_review"
+              x-itemid="{{orphan.id}}"
+              x-vcs="{{orphan.vcs_id}}"
+              x-revision1="{{orphan.r_from}}"
+              x-revision2="{{orphan.r_to}}"
+              x-author="{{orphan.author}}"
+              x-count="{{orphan.count}}"
+              >
+              [add to review]
+            </span>
+       </p>
+    {% endfor %}
+        <span class="create_review_from_selected">[create review from selected files]</span><hr>
+{% endif %}
+<div id="create_review">
+</div>
+{{ content }}
+
+{% endblock %}

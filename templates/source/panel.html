@@ -1,0 +1,20 @@
+<div class="row">
+    Repo list:
+    <select onChange="document.location=options[selectedIndex].value;">
+    {% if content.repolist is not none%}
+        {% for repo in content.repolist %}
+        {% set active_selector = '' %}
+        {% if content.activeRepoId == repo.id %}
+        {% set active_selector = 'selected' %}
+        {% endif %}
+        <option value="/source/{{repo.id}}" {{ active_selector }} >{{ repo.type }} : {{ repo.address }}</option>
+        {% endfor %}
+    {% endif %}
+    </select>
+    <select id="add_repo_type">
+        <option value="svn">svn</option>
+        <option value="hg">hg</option>
+        <option value="git">git</option>
+    </select>
+    <span><input type="text" id="add_repo_value"><button id="add_repo_button">add repo</button></span>
+</div>

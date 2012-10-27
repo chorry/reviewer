@@ -1,0 +1,20 @@
+{% extends "wrapper.html" %}
+{% block content %}
+{% for item in content %}
+<div class="row-fluid diff_window">
+    <div class="row"><h3>{{ item.head.new.file }}</h3></div>
+    <div class="row">{{ item.head.old.rev }} &mdash; {{ item.head.new.rev }}</div>
+    <div class="row diff_text">
+        <table>
+            {% for line in item.diff_text %}
+            <tr>
+                <td>{{ line.linenum_old }}</td>
+                <td>{{ line.linenum_new }}</td>
+                <td class="diff_{{ line.type }}"><pre>{{ line.line }}</pre></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

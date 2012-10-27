@@ -1,0 +1,6 @@
+Возможности на ревью:
+выбирать несколько разных коммитов (45-50 + 52-60, и тд)
+выбирать несколько авторов за период.
+TODO: fix encoding from vcs log!
+TODO: remove extra heading for specified rootVCS
+(http://localhost:5000/source/2/top/branches/Dev_1.2.0/htdocs should be htdocs)
